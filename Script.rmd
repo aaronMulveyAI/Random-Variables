@@ -1,0 +1,132 @@
+---
+title: "Probability and Random Variables"
+author: "Aaron Mulvey"
+date: "9/15/2022"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(dplyr)
+
+```
+
+## Question 1 (Named Distributions) 
+
+An open air movie theater overbooks one of their viewings. They sell more tickets than the number of
+available beach chairs. They do this often in the hope that not everyone will show up to the show and to
+maximize profits. The movie theater has 50 seats. But this time they sold 100 tickets! From past experience
+with a similar weather forecast, the movie theater manager can estimate that 50% of the people who bought
+tickets will actually show up. Find the probability that there won’t be enough beach chairs available
+
+For calculating the probability we are going to use the binomial distribution formula:
+
+$$P\left(x\right) = \binom{n}{x} p^x\left(q\right)^{n-x}$$ 
+Where:
+$$\binom{n}{x} = \frac{n!}{x!(n - x)!}$$
+$$n = \text {number of tries}$$
+$$x = \text{number of succes}$$
+$$p = \text{probability of succes}$$
+$$q = \text{probability of defeat}$$
+
+I will calculate the probability storing all the outcomes of the formula in a data frame and then
+making the summary of all of them:
+
+
+```{r, include = T}
+
+n <- 100
+
+Xi <- 50
+
+x <- c(0: (Xi-1))
+
+p <- 0.5
+
+q <- 1 - p
+
+data <- data.frame(n = n,
+                   i = x,
+                   p = p,
+                   q = q)
+
+dataM <- data  %>%
+  mutate(p = p^i,
+         q = q^(n-i),
+         ) %>%
+  mutate(fact = factorial(n)/(factorial(i) * factorial(n-i))) %>%
+  mutate(resultado = p * q * fact)
+
+resultado <- sum(dataM$resultado)
+
+resultado
+
+```
+
+Is easier if I just aply the formula that R gives for calculating the binomial probability:
+
+
+```{r, include = T}
+
+resultado2 <- 1- pbinom(Xi,
+                     n,
+                     p)
+
+resultado2
+
+```
+
+## Question 2 (Independence) 
+
+Give one real world example each:
+
+1. Two random variables that are independent and identically distributed
+
+To throw 2 fair coins and see how many heads you get.
+
+Variable 1 = count of the heads of the first coin.
+
+Variable 2 = count of the heads of the second coin.
+
+Both of them are independent and because the outcome of one of them will not affect to the other one and are identically distributed because the probability of having head is the same for both of them.
+
+
+2. Two random variables that are independent and not identically distributed
+
+To throw a fair coin  and see how many heads you get and to throw a dice and see how many ones you get.
+
+Variable 1 = count of the heads of the coin.
+
+Variable 2 = count of the ones of the dice.
+
+Both of them are independent and because the outcome of one of them will not affect to the other,
+but the distribution is not identical because the probability of having a head is 1/2 and the probability of having a one is 1/6.
+
+3. Two random variables that are dependent and identically distributed
+
+To throw one coin and count the heads and the tails.
+
+Variable 1 = count if the throw is head.
+
+Variable 2 = count if the result is tail.
+
+Are dependent because the outcome of the throw will affect to the other possible outcome i.e. if I get head is impossible to get tail so that's affecting. And are identically distributed because the probability of having a head or a tail is of 1/2 each.
+
+4. Two random variables that are dependent and not identically distributed
+
+To throw a rolling dice and check in one if you get 1 or not.
+
+Variable 1 = count if you get one.
+
+Variable 2 = count if you don`t get one.
+
+Is dependent because the outcome of the throw will affect to the other possible outcome i.e.If
+i get a 1 is impossible to get a 5 so the outcome of one throw is affecting.
+And is not identically distributed because the probability of having a one is of 1/6 and the probability of not having a one is of 5/6.
+
+
+
+
